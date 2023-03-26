@@ -1,0 +1,150 @@
+C51 COMPILER V9.57.0.0   LCD12864                                                          03/19/2023 08:50:33 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE LCD12864
+OBJECT MODULE PLACED IN .\Objects\lcd12864.obj
+COMPILER INVOKED BY: G:\keil\C51\BIN\C51.EXE lcd12864.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\lcd12864.lst) OBJECT(
+                    -.\Objects\lcd12864.obj)
+
+line level    source
+
+   1          
+   2          #include "lcd12864.h"
+   3          
+   4          // 引脚配置
+   5          sbit LCD_RS = P2 ^ 0;
+   6          sbit LCD_RW = P2 ^ 1;
+   7          sbit LCD_EN = P2 ^ 2;
+   8          #define LCD_DATA_PORT P0
+   9          void LCD_CheckBusy(void)
+  10          {
+  11   1          LCD_RS = 0;
+  12   1          LCD_RW = 1;
+  13   1          LCD_EN = 1;
+  14   1          LCD_DATA_PORT = 0xFF;
+  15   1          while ((LCD_DATA_PORT & 0x80) == 0x80)
+  16   1              ;
+  17   1          LCD_EN = 0;
+  18   1      }
+  19          /**
+  20           * @brief  LCD12864写命令
+  21           * @param  Command 要写入的命令
+  22           * @retval 无
+  23           */
+  24          void LCD_WriteCommand(unsigned char Command)
+  25          {
+  26   1          LCD_RS = 0;
+  27   1          LCD_RW = 0;
+  28   1          LCD_EN = 0;
+  29   1          LCD_DATA_PORT = Command;
+  30   1          LCD_EN = 1;
+  31   1          delay_ms(5);
+  32   1          LCD_EN = 0;
+  33   1          delay_ms(1);
+  34   1      }
+  35          
+  36          /**
+  37           * @brief  LCD12864写数据
+  38           * @param  Data 要写入的数据
+  39           * @retval 无
+  40           */
+  41          void LCD_WriteData(unsigned char Data)
+  42          {
+  43   1          LCD_RS = 1;
+  44   1          LCD_RW = 0;
+  45   1          LCD_EN = 0;
+  46   1          LCD_DATA_PORT = Data;
+  47   1          LCD_EN = 1;
+  48   1          delay_ms(5);
+  49   1          LCD_EN = 0;
+  50   1          delay_ms(1);
+  51   1      }
+  52          
+  53          /**
+  54           * @brief  LCD12864设置光标位置
+C51 COMPILER V9.57.0.0   LCD12864                                                          03/19/2023 08:50:33 PAGE 2   
+
+  55           * @param  Line 行位置，范围：0~1
+  56           * @param  Column 列位置，范围：0~15
+  57           * @retval 无
+  58           */
+  59          void LCD_SetCursor(unsigned char Line, unsigned char Column)
+  60          {
+  61   1          if (Line == 0)
+  62   1          {
+  63   2              LCD_WriteCommand(0x80 + Column);
+  64   2          }
+  65   1          else if (Line == 1)
+  66   1          {
+  67   2              LCD_WriteCommand(0x90 + Column);
+  68   2          }
+  69   1          else if (Line == 2)
+  70   1          {
+  71   2              LCD_WriteCommand(0x88 + Column);
+  72   2          }
+  73   1          else if (Line == 3)
+  74   1          {
+  75   2              LCD_WriteCommand(0x98 + Column);
+  76   2          }
+  77   1          delay_ms(1);
+  78   1      }
+  79          
+  80          /**
+  81           * @brief  LCD12864初始化函数
+  82           * @param  无
+  83           * @retval 无
+  84           */
+  85          void LCD_Init(void)
+  86          {
+  87   1          LCD_RW = 0; // 只写入数据不读取
+  88   1          LCD_WriteCommand(0x30);
+  89   1          LCD_WriteCommand(0x0c);
+  90   1          LCD_WriteCommand(0x01);
+  91   1          LCD_WriteCommand(0x06);
+  92   1      }
+  93          /**
+  94           * @brief  在LCD12864指定位置上显示一个字符
+  95           * @param  Line 行位置，范围：0~1
+  96           * @param  Column 列位置，范围：0~15
+  97           * @param  Char 要显示的字符
+  98           * @retval 无
+  99           */
+ 100          void LCD_ShowChar(unsigned char Line, unsigned char Column, char Char)
+ 101          {
+ 102   1          LCD_SetCursor(Line, Column);
+ 103   1          LCD_WriteData(Char);
+ 104   1      }
+ 105          /**
+ 106           * @brief  在LCD12864指定位置开始显示所给字符串
+ 107           * @param  Line 起始行位置，范围：0~1
+ 108           * @param  Column 起始列位置，范围：0~15
+ 109           * @param  String 要显示的字符串
+ 110           * @retval 无
+ 111           */
+ 112          void LCD_ShowString(unsigned char Line, unsigned char Column, char *String)
+ 113          {
+ 114   1          unsigned char i;
+ 115   1          LCD_SetCursor(Line, Column);
+ 116   1          for (i = 0; String[i] != '\0'; i++)
+C51 COMPILER V9.57.0.0   LCD12864                                                          03/19/2023 08:50:33 PAGE 3   
+
+ 117   1          {
+ 118   2              if (i >= 16)
+ 119   2                  break;
+ 120   2              LCD_WriteData(String[i]);
+ 121   2          }
+ 122   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    202    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

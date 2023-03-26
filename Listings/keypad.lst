@@ -1,0 +1,84 @@
+C51 COMPILER V9.57.0.0   KEYPAD                                                            03/19/2023 08:50:33 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE KEYPAD
+OBJECT MODULE PLACED IN .\Objects\keypad.obj
+COMPILER INVOKED BY: G:\keil\C51\BIN\C51.EXE keypad.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\keypad.lst) OBJECT(.\Ob
+                    -jects\keypad.obj)
+
+line level    source
+
+   1          #include "keypad.h"
+   2          
+   3          // 引脚定义
+   4          #define KeyPad_Port P1
+   5          
+   6          /**
+   7           * @brief 扫描键盘按下的按键
+   8           *
+   9           * @return unsigned char 扫描到的按键
+  10           */
+  11          unsigned char KeypadScan(void)
+  12          {
+  13   1          // 选中第一行
+  14   1          KeyPad_Port = 0x7F;
+  15   1          // 根据列电平返回扫描结果
+  16   1          if (!(KeyPad_Port & 0x01))
+  17   1              return 'A';
+  18   1          if (!(KeyPad_Port & 0x02))
+  19   1              return '9';
+  20   1          if (!(KeyPad_Port & 0x04))
+  21   1              return '8';
+  22   1          if (!(KeyPad_Port & 0x08))
+  23   1              return '7';
+  24   1          // 选中第二行
+  25   1          KeyPad_Port = 0xBF;
+  26   1          // 根据列电平返回扫描结果
+  27   1          if (!(KeyPad_Port & 0x01))
+  28   1              return 'B';
+  29   1          if (!(KeyPad_Port & 0x02))
+  30   1              return '6';
+  31   1          if (!(KeyPad_Port & 0x04))
+  32   1              return '5';
+  33   1          if (!(KeyPad_Port & 0x08))
+  34   1              return '4';
+  35   1          // 选中第三行
+  36   1          KeyPad_Port = 0xDF;
+  37   1          // 根据列电平返回扫描结果
+  38   1          if (!(KeyPad_Port & 0x01))
+  39   1              return 'C';
+  40   1          if (!(KeyPad_Port & 0x02))
+  41   1              return '3';
+  42   1          if (!(KeyPad_Port & 0x04))
+  43   1              return '2';
+  44   1          if (!(KeyPad_Port & 0x08))
+  45   1              return '1';
+  46   1          // 选中第四行
+  47   1          KeyPad_Port = 0xEF;
+  48   1          // 根据列电平返回扫描结果
+  49   1          if (!(KeyPad_Port & 0x01))
+  50   1              return 'D';
+  51   1          if (!(KeyPad_Port & 0x02))
+  52   1              return '=';
+  53   1          if (!(KeyPad_Port & 0x04))
+  54   1              return '0';
+C51 COMPILER V9.57.0.0   KEYPAD                                                            03/19/2023 08:50:33 PAGE 2   
+
+  55   1          if (!(KeyPad_Port & 0x08))
+  56   1              return '/';
+  57   1          return 0;
+  58   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    143    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

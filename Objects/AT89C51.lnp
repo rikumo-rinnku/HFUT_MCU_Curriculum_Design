@@ -1,0 +1,9 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\lcd12864.obj",
+".\Objects\keypad.obj",
+".\Objects\delay.obj",
+".\Objects\timer0.obj" 
+TO ".\Objects\AT89C51" 
+PRINT(".\Listings\AT89C51.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 
